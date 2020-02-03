@@ -34,6 +34,31 @@ class _CaptureScreenState extends State<CaptureScreen> {
     ),
   ];
 
+  final TextEditingController _controller = new TextEditingController();
+  String _capture = '';
+
+  void _handleCapture(String e) {
+    setState(() {
+      _capture = e;
+    });
+  }
+
+  void _addCapture() {
+    Task task = Task(
+      _tasks.length + 1,
+      _capture,
+      TaskType.Capture,
+      false,
+      DateTime.now()
+    );
+    _tasks.add(task);
+    
+    setState(() {
+      _capture = '';
+    });
+    _controller.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,11 +78,17 @@ class _CaptureScreenState extends State<CaptureScreen> {
           Container(
             padding: EdgeInsets.all(16.0),
             child: TextField(
+              controller: _controller,
+              onChanged: _handleCapture,
               decoration: InputDecoration(
                 hintText: '何をキャプチャしますか？',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: _addCapture,
+                )
               ),
             ),
-          )
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
