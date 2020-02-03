@@ -4,7 +4,7 @@ class Task {
   final int id;
   final String title;
   final TaskType type;
-  final bool done;
+  bool done;
   final DateTime createdAt;
 
   Task(
@@ -14,4 +14,8 @@ class Task {
     this.done,
     this.createdAt,
   );
+
+  changeStatus() {
+    this.done = !this.done;
+  }
 }

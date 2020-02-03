@@ -10,7 +10,7 @@ class TaskCard extends StatelessWidget {
 
   final Task task;
 
-  final double _itemHeight = 80.0;
+  final double _itemHeight = 72.0;
   final double _buttonWidth = 36.0;
 
   @override
@@ -34,7 +34,12 @@ class TaskCard extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.centerLeft,
                       padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(task.title),
+                      child: Text(
+                        task.title,
+                        style: TextStyle(
+                          decoration: task.done ? TextDecoration.lineThrough : TextDecoration.none,
+                        ),
+                      ),
                     ),
                   ),
                   Container(
@@ -53,13 +58,18 @@ class TaskCard extends StatelessWidget {
             ),
             Row(
               children: <Widget>[
-                Container(
-                  color: Colors.blueAccent,
-                  height: _itemHeight,
-                  padding: EdgeInsets.symmetric(horizontal: 6.0),
-                  child: new Icon(
-                    Icons.check,
-                    color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    task.changeStatus();
+                  },
+                  child: Container(
+                    color: Colors.blueAccent,
+                    height: _itemHeight,
+                    padding: EdgeInsets.symmetric(horizontal: 6.0),
+                    child: new Icon(
+                      Icons.check,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 Container(
