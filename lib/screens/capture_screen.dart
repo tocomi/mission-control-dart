@@ -59,6 +59,12 @@ class _CaptureScreenState extends State<CaptureScreen> {
     _controller.clear();
   }
 
+  void _changeTaskState(int index) {
+    setState(() {
+      _tasks[index].done = !_tasks[index].done;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +77,7 @@ class _CaptureScreenState extends State<CaptureScreen> {
             child: ListView.builder(
               itemCount: _tasks.length,
               itemBuilder: (context, int index) {
-                return TaskCard(task: _tasks[index]);
+                return TaskCard(task: _tasks[index], index: index, changeTaskState: _changeTaskState);
               },
             )
           ),

@@ -6,9 +6,13 @@ class TaskCard extends StatelessWidget {
   const TaskCard({
     Key key,
     this.task,
+    this.index,
+    this.changeTaskState,
   }) : super(key: key);
 
   final Task task;
+  final int index;
+  final Function changeTaskState;
 
   final double _itemHeight = 72.0;
   final double _buttonWidth = 36.0;
@@ -60,7 +64,7 @@ class TaskCard extends StatelessWidget {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    task.changeStatus();
+                    changeTaskState(index);
                   },
                   child: Container(
                     color: Colors.blueAccent,
