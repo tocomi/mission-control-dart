@@ -8,11 +8,13 @@ class TaskCard extends StatelessWidget {
     this.task,
     this.index,
     this.changeTaskState,
+    this.deleteTask,
   }) : super(key: key);
 
   final Task task;
   final int index;
   final Function changeTaskState;
+  final Function deleteTask;
 
   final double _itemHeight = 72.0;
   final double _buttonWidth = 36.0;
@@ -50,7 +52,7 @@ class TaskCard extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(bottom: 8.0, left: 8.0),
                     child: Text(
-                      '2020/02/01',
+                      task.createdAt.toString(),
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.grey[700],
@@ -104,13 +106,18 @@ class TaskCard extends StatelessWidget {
                     )
                   ),
                 ),
-                Container(
-                  color: Colors.red,
-                  height: _itemHeight,
-                  padding: EdgeInsets.symmetric(horizontal: 6.0),
-                  child: new Icon(
-                    Icons.delete,
-                    color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    deleteTask(index);
+                  },
+                  child: Container(
+                    color: Colors.red,
+                    height: _itemHeight,
+                    padding: EdgeInsets.symmetric(horizontal: 6.0),
+                    child: new Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],

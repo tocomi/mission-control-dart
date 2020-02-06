@@ -67,6 +67,12 @@ class _CaptureScreenState extends State<CaptureScreen> {
     });
   }
 
+  void _deleteTask(int index) {
+    setState(() {
+      _tasks.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +85,12 @@ class _CaptureScreenState extends State<CaptureScreen> {
             child: ListView.builder(
               itemCount: _tasks.length,
               itemBuilder: (context, int index) {
-                return TaskCard(task: _tasks[index], index: index, changeTaskState: _changeTaskState);
+                return TaskCard(
+                  task: _tasks[index],
+                  index: index,
+                  changeTaskState: _changeTaskState,
+                  deleteTask: _deleteTask,
+                );
               },
             )
           ),
