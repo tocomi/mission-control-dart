@@ -44,6 +44,8 @@ class _CaptureScreenState extends State<CaptureScreen> {
   }
 
   void _addCapture() {
+    if (_capture == '') return;
+
     Task task = Task(
       _tasks.length + 1,
       _capture,
@@ -52,7 +54,7 @@ class _CaptureScreenState extends State<CaptureScreen> {
       DateTime.now()
     );
     _tasks.add(task);
-    
+
     setState(() {
       _capture = '';
     });
