@@ -47,7 +47,7 @@ class _CaptureScreenState extends State<CaptureScreen> {
     if (_capture == '') return;
 
     Task task = Task(
-      _tasks.length + 1,
+      _tasks.last.id + 1,
       _capture,
       TaskType.Capture,
       false,
@@ -61,20 +61,36 @@ class _CaptureScreenState extends State<CaptureScreen> {
     _controller.clear();
   }
 
-  void _changeTaskState(int index) {
+  void _changeTaskState(int id) {
+    final Task target = _tasks.firstWhere((task) => task.id == id);
     setState(() {
-      _tasks[index].done = !_tasks[index].done;
+      target.done = !target.done;
     });
   }
 
-  void _deleteTask(int index) {
+  void _deleteTask(int id) {
+    final int index = _tasks.indexWhere((task) => task.id == id);
     setState(() {
       _tasks.removeAt(index);
     });
   }
 
+  void _changeTaskType(int id, TaskType taskType) {
+    final Task target = _tasks.firstWhere((task) => task.id == id);
+    setState(() {
+      target.type = taskType;
+    });
+  }
+
+  List<Task> _filterTasks(TaskType taskType) {
+    return _tasks.where((task) => task.type == taskType).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final capturedTasks = _filterTasks(TaskType.Capture);
+    final ndnTasks = _filterTasks(TaskType.NDN);
+    final nvdnTasks = _filterTasks(TaskType.NVDN);
     return Scaffold(
       appBar: AppBar(
         title: Text('Mission Control'),
@@ -83,12 +99,12 @@ class _CaptureScreenState extends State<CaptureScreen> {
         children: <Widget>[
           Expanded(
             child: ListView.builder(
-              itemCount: _tasks.length,
+              itemCount: capturedTasks.length,
               itemBuilder: (context, int index) {
                 return TaskCard(
-                  task: _tasks[index],
-                  index: index,
+                  task: capturedTasks[index],
                   changeTaskState: _changeTaskState,
+                  changeTaskType: _changeTaskType,
                   deleteTask: _deleteTask,
                 );
               },

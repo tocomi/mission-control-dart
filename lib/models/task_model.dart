@@ -3,7 +3,7 @@ import './task_type.dart';
 class Task {
   final int id;
   final String title;
-  final TaskType type;
+  TaskType type;
   bool done;
   final DateTime createdAt;
 
@@ -15,7 +15,4 @@ class Task {
     this.createdAt,
   );
 
-  changeStatus() {
-    this.done = !this.done;
-  }
 }

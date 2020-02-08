@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:mission_control/models/task_model.dart';
+import 'package:mission_control/models/task_type.dart';
 
 class TaskCard extends StatelessWidget {
 
   const TaskCard({
     Key key,
     this.task,
-    this.index,
     this.changeTaskState,
+    this.changeTaskType,
     this.deleteTask,
   }) : super(key: key);
 
   final Task task;
-  final int index;
   final Function changeTaskState;
+  final Function changeTaskType;
   final Function deleteTask;
 
   final double _itemHeight = 72.0;
@@ -66,7 +67,7 @@ class TaskCard extends StatelessWidget {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    changeTaskState(index);
+                    changeTaskState(task.id);
                   },
                   child: Container(
                     color: Colors.blueAccent,
@@ -78,37 +79,47 @@ class TaskCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  color: Colors.green[400],
-                  height: _itemHeight,
-                  width: _buttonWidth,
-                  padding: EdgeInsets.symmetric(horizontal: 6.0),
-                  child: Text(
-                    'ND',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    )
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  color: Colors.yellow[600],
-                  height: _itemHeight,
-                  width: _buttonWidth,
-                  padding: EdgeInsets.symmetric(horizontal: 6.0),
-                  child: Text(
-                    'NV',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    )
+                GestureDetector(
+                  onTap: () {
+                    changeTaskType(task.id, TaskType.NDN);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: Colors.green[400],
+                    height: _itemHeight,
+                    width: _buttonWidth,
+                    padding: EdgeInsets.symmetric(horizontal: 6.0),
+                    child: Text(
+                      'ND',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      )
+                    ),
                   ),
                 ),
                 GestureDetector(
                   onTap: () {
-                    deleteTask(index);
+                    changeTaskType(task.id, TaskType.NVDN);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: Colors.yellow[600],
+                    height: _itemHeight,
+                    width: _buttonWidth,
+                    padding: EdgeInsets.symmetric(horizontal: 6.0),
+                    child: Text(
+                      'NV',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      )
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    deleteTask(task.id);
                   },
                   child: Container(
                     color: Colors.red,
