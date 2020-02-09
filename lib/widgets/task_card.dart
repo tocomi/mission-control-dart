@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mission_control/models/task_model.dart';
 import 'package:mission_control/models/task_type.dart';
 
@@ -53,7 +54,7 @@ class TaskCard extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(bottom: 8.0, left: 8.0),
                     child: Text(
-                      task.createdAt.toString(),
+                    new DateFormat('yyyy/MM/dd').format(task.createdAt),
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.grey[700],
