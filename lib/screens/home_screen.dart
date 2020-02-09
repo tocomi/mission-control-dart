@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _selectMenu,
         selectedItemColor: Colors.amber[800],
       ),
-      floatingActionButton: Container(
+      floatingActionButton: _selectedIndex == 0 ? Container(
         margin: EdgeInsets.only(bottom: 60.0),
         child: FloatingActionButton.extended(
           backgroundColor: Colors.blueAccent,
@@ -196,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           onPressed: () {},
         ),
-      ),
+      ) : Container(),
     );
   }
 }
