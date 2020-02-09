@@ -136,6 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
               deleteTask: _deleteTask,
             )
           ),
+          _selectedIndex == 0 ?
           Container(
             padding: EdgeInsets.all(16.0),
             child: TextField(
@@ -149,7 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ),
             ),
-          ),
+          ) :
+          Container(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
