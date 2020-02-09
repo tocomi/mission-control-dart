@@ -54,16 +54,17 @@ class _HomeScreenState extends State<HomeScreen> {
   void _addCapture() {
     if (_capture == '') return;
 
+    int newId = _tasks.length == 0 ? 1 : _tasks.last.id + 1;
     Task task = Task(
-      _tasks.last.id + 1,
+      newId,
       _capture,
       TaskType.Capture,
       false,
       DateTime.now()
     );
-    _tasks.add(task);
 
     setState(() {
+      _tasks.add(task);
       _capture = '';
     });
     _controller.clear();
