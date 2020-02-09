@@ -28,7 +28,14 @@ class _HomeScreenState extends State<HomeScreen> {
     new Task(
       3,
       'キャプチャキャプチャキャプチャキャプチャキャプチャキャプチャ',
-      TaskType.Capture,
+      TaskType.NDN,
+      false,
+      DateTime.now(),
+    ),
+    new Task(
+      4,
+      'NVDNNVDNNVDN',
+      TaskType.NVDN,
       false,
       DateTime.now(),
     ),
