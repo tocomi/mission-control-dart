@@ -100,6 +100,19 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  String _handleTitle() {
+    switch (_selectedIndex) {
+      case 0:
+        return 'Capture List';
+      case 1:
+        return 'NDN';
+      case 2: 
+        return 'NVDN';
+      default:
+        return 'Mission Control';
+    }
+  }
+
   void _selectMenu(int index) {
     setState(() {
       _selectedIndex = index;
@@ -111,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final tasks = _selectTasks();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mission Control'),
+        title: Text(_handleTitle()),
       ),
       body: Column(
         children: <Widget>[
