@@ -185,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: FloatingActionButton.extended(
           backgroundColor: Colors.blueAccent,
           icon: Icon(
-            Icons.thumb_up,
+            Icons.playlist_add_check,
             color: Colors.white,
           ),
           label: Text(
