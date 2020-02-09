@@ -10,7 +10,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  final List<Task> _tasks = [
+  List<Task> _tasks = [
     new Task(
       1,
       'キャプチャキャプチャ',
@@ -120,6 +120,51 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  bool canComplete() {
+    final List<Task> capturedTasks = _tasks.where((task) => task.type == TaskType.Capture).toList();
+    if (capturedTasks.length == 0) return false;
+
+    return !capturedTasks.any((task) => task.done == false);
+  }
+
+  void _completeToday() {
+    if (!canComplete()) return;
+
+    setState(() {
+      _tasks = _tasks.where((task) => task.type != TaskType.Capture).toList();
+    });
+  }
+
+  Widget _buildCompleteButton() {
+    return canComplete() ? FloatingActionButton.extended(
+      backgroundColor: Colors.blueAccent,
+      icon: Icon(
+        Icons.playlist_add_check,
+        color: Colors.white,
+      ),
+      label: Text(
+        '完了する',
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      onPressed: _completeToday,
+    ) : FloatingActionButton.extended(
+      backgroundColor: Colors.grey,
+      icon: Icon(
+        Icons.playlist_add_check,
+        color: Colors.white,
+      ),
+      label: Text(
+        '完了する',
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      onPressed: () {},
+    );
+  }
+
   void _selectMenu(int index) {
     setState(() {
       _selectedIndex = index;
@@ -182,20 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: _selectedIndex == 0 ? Container(
         margin: EdgeInsets.only(bottom: 60.0),
-        child: FloatingActionButton.extended(
-          backgroundColor: Colors.blueAccent,
-          icon: Icon(
-            Icons.playlist_add_check,
-            color: Colors.white,
-          ),
-          label: Text(
-            '完了する',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          onPressed: () {},
-        ),
+        child: _buildCompleteButton(),
       ) : Container(),
     );
   }
