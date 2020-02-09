@@ -3,12 +3,12 @@ import 'package:mission_control/models/task_model.dart';
 import 'package:mission_control/models/task_type.dart';
 import 'package:mission_control/widgets/task_card.dart';
 
-class CaptureScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _CaptureScreenState createState() => _CaptureScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _CaptureScreenState extends State<CaptureScreen> {
+class _HomeScreenState extends State<HomeScreen> {
 
   final List<Task> _tasks = [
     new Task(

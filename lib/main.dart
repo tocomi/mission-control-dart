@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mission_control/screens/capture_screen.dart';
+import 'package:mission_control/screens/home_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         accentColor: Color(0xFFFEF9EB),
       ),
-      home: CaptureScreen(),
+      home: HomeScreen(),
     );
   }
 }
