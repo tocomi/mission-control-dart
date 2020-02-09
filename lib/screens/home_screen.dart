@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mission_control/models/task_model.dart';
 import 'package:mission_control/models/task_type.dart';
-import 'package:mission_control/widgets/task_card.dart';
+import 'package:mission_control/widgets/task_list.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final TextEditingController _controller = new TextEditingController();
   String _capture = '';
+  int _selectedIndex = 0;
 
   void _handleCapture(String e) {
     setState(() {
@@ -86,11 +87,28 @@ class _HomeScreenState extends State<HomeScreen> {
     return _tasks.where((task) => task.type == taskType).toList();
   }
 
+  List<Task> _selectTasks() {
+    switch (_selectedIndex) {
+      case 0:
+        return _filterTasks(TaskType.Capture);
+      case 1:
+        return _filterTasks(TaskType.NDN);
+      case 2: 
+        return _filterTasks(TaskType.NVDN);
+      default:
+        return _filterTasks(TaskType.Capture);
+    }
+  }
+
+  void _selectMenu(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final capturedTasks = _filterTasks(TaskType.Capture);
-    final ndnTasks = _filterTasks(TaskType.NDN);
-    final nvdnTasks = _filterTasks(TaskType.NVDN);
+    final tasks = _selectTasks();
     return Scaffold(
       appBar: AppBar(
         title: Text('Mission Control'),
@@ -98,16 +116,11 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-              itemCount: capturedTasks.length,
-              itemBuilder: (context, int index) {
-                return TaskCard(
-                  task: capturedTasks[index],
-                  changeTaskState: _changeTaskState,
-                  changeTaskType: _changeTaskType,
-                  deleteTask: _deleteTask,
-                );
-              },
+            child: TaskList(
+              tasks: tasks,
+              changeTaskState: _changeTaskState,
+              changeTaskType: _changeTaskType,
+              deleteTask: _deleteTask,
             )
           ),
           Container(
@@ -141,6 +154,8 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('NVDN'),
           ),
         ],
+        currentIndex: _selectedIndex,
+        onTap: _selectMenu,
         selectedItemColor: Colors.amber[800],
       ),
     );
