@@ -180,6 +180,23 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _selectMenu,
         selectedItemColor: Colors.amber[800],
       ),
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(bottom: 60.0),
+        child: FloatingActionButton.extended(
+          backgroundColor: Colors.blueAccent,
+          icon: Icon(
+            Icons.thumb_up,
+            color: Colors.white,
+          ),
+          label: Text(
+            '完了する',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          onPressed: () {},
+        ),
+      ),
     );
   }
 }
