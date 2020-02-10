@@ -19,7 +19,6 @@ class TaskCard extends StatelessWidget {
   final Function deleteTask;
 
   final double _itemHeight = 72.0;
-  final double _buttonWidth = 36.0;
 
   @override
   Widget build(BuildContext context) {
