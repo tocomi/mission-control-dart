@@ -71,12 +71,19 @@ class TaskCard extends StatelessWidget {
                     changeTaskState(task.id);
                   },
                   child: Container(
-                    color: Colors.blueAccent,
-                    height: _itemHeight,
-                    padding: EdgeInsets.symmetric(horizontal: 6.0),
+                    height: 24.0,
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 1.0,
+                        color: Colors.green[400],
+                      )
+                    ),
                     child: new Icon(
                       Icons.check,
-                      color: Colors.white,
+                      color: Colors.green[400],
+                      size: 16.0,
                     ),
                   ),
                 ),
@@ -85,17 +92,24 @@ class TaskCard extends StatelessWidget {
                     changeTaskType(task.id, TaskType.NDN);
                   },
                   child: Container(
-                    alignment: Alignment.center,
-                    color: Colors.green[400],
-                    height: _itemHeight,
-                    width: _buttonWidth,
-                    padding: EdgeInsets.symmetric(horizontal: 6.0),
-                    child: Text(
-                      'ND',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                    height: 24.0,
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 1.0,
+                        color: Colors.blueAccent,
                       )
+                    ),
+                    child: Center(
+                      child: Text(
+                        'ND',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueAccent,
+                        )
+                      ),
                     ),
                   ),
                 ),
@@ -104,17 +118,24 @@ class TaskCard extends StatelessWidget {
                     changeTaskType(task.id, TaskType.NVDN);
                   },
                   child: Container(
-                    alignment: Alignment.center,
-                    color: Colors.yellow[600],
-                    height: _itemHeight,
-                    width: _buttonWidth,
-                    padding: EdgeInsets.symmetric(horizontal: 6.0),
-                    child: Text(
-                      'NV',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                    height: 24.0,
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 1.0,
+                        color: Colors.yellow[700],
                       )
+                    ),
+                    child: Center(
+                      child: Text(
+                        'NV',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.yellow[700],
+                        )
+                      ),
                     ),
                   ),
                 ),
@@ -123,12 +144,19 @@ class TaskCard extends StatelessWidget {
                     deleteTask(task.id);
                   },
                   child: Container(
-                    color: Colors.red,
-                    height: _itemHeight,
-                    padding: EdgeInsets.symmetric(horizontal: 6.0),
+                    height: 24.0,
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        width: 1.0,
+                        color: Colors.red,
+                      )
+                    ),
                     child: new Icon(
                       Icons.delete,
-                      color: Colors.white,
+                      color: Colors.red,
+                      size: 16.0,
                     ),
                   ),
                 ),
