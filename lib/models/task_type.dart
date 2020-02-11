@@ -1,3 +1,3 @@
 enum TaskType {
-  Capture, NDN, NVDN,
+  Capture, NDN, NVDN, OTHER,
 }

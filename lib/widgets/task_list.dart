@@ -6,12 +6,14 @@ class TaskList extends StatelessWidget {
 
   const TaskList({
     Key key,
+    this.listKey,
     this.tasks,
     this.changeTaskState,
     this.changeTaskType,
     this.deleteTask,
   }) : super(key: key);
 
+  final GlobalKey<AnimatedListState> listKey;
   final List<Task> tasks;
   final Function changeTaskState;
   final Function changeTaskType;
@@ -19,14 +21,18 @@ class TaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: tasks.length,
-      itemBuilder: (context, int index) {
-        return TaskCard(
-          task: tasks[index],
-          changeTaskState: changeTaskState,
-          changeTaskType: changeTaskType,
-          deleteTask: deleteTask,
+    return AnimatedList(
+      key: listKey,
+      initialItemCount: tasks.length,
+      itemBuilder: (context, int index, animation) {
+        return SizeTransition(
+          sizeFactor: animation,
+          child: TaskCard(
+            task: tasks[index],
+            changeTaskState: changeTaskState,
+            changeTaskType: changeTaskType,
+            deleteTask: deleteTask,
+          ),
         );
       },
     );

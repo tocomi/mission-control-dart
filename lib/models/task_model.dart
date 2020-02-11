@@ -1,7 +1,7 @@
 import './task_type.dart';
 
 class Task {
-  final int id;
+  final BigInt id;
   final String title;
   TaskType type;
   bool done;

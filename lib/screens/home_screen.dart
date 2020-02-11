@@ -10,36 +10,44 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  List<Task> _tasks = [
+  List<Task> _captures = [
     new Task(
-      1,
+      BigInt.from(1),
       'キャプチャキャプチャ',
       TaskType.Capture,
       false,
       DateTime.now(),
     ),
     new Task(
-      2,
+      BigInt.from(2),
       'キャプチャキャプチャキャプチャキャプチャ',
       TaskType.Capture,
       false,
       DateTime.now(),
     ),
+  ];
+  List<Task> _ndns = [
     new Task(
-      3,
+      BigInt.from(3),
       'キャプチャキャプチャキャプチャキャプチャキャプチャキャプチャ',
       TaskType.NDN,
       false,
       DateTime.now(),
     ),
+  ];
+  List<Task> _nvdns = [
     new Task(
-      4,
+      BigInt.from(4),
       'NVDNNVDNNVDN',
       TaskType.NVDN,
       false,
       DateTime.now(),
     ),
   ];
+
+  final _capturesKey = GlobalKey<AnimatedListState>();
+  final _ndnsKey = GlobalKey<AnimatedListState>();
+  final _nvdnsKey = GlobalKey<AnimatedListState>();
 
   final TextEditingController _controller = new TextEditingController();
   String _capture = '';
@@ -54,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _addCapture() {
     if (_capture == '') return;
 
-    int newId = _tasks.length == 0 ? 1 : _tasks.last.id + 1;
+    BigInt newId = _makeNewId();
     Task task = Task(
       newId,
       _capture,
@@ -64,47 +72,116 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     setState(() {
-      _tasks.add(task);
+      _captures.add(task);
+    });
+    if (_capturesKey.currentState != null) {
+      _capturesKey.currentState.insertItem(_captures.length - 1);
+    }
+
+    setState(() {
       _capture = '';
     });
     _controller.clear();
   }
 
-  void _changeTaskState(int id) {
-    final Task target = _tasks.firstWhere((task) => task.id == id);
+  void _changeTaskState(BigInt id) {
+    final taskList = _selectTaskListByCurrentScreen();
+    final Task target = taskList.firstWhere((task) => task.id == id);
     setState(() {
       target.done = !target.done;
     });
   }
 
-  void _deleteTask(int id) {
-    final int index = _tasks.indexWhere((task) => task.id == id);
+  void _deleteTask(BigInt id) {
+    final taskList = _selectTaskListByCurrentScreen();
+    final int index = taskList.indexWhere((task) => task.id == id);
     setState(() {
-      _tasks.removeAt(index);
+      taskList.removeAt(index);
+    });
+
+    final listKey = _selectListKeyByCurrentScreen();
+    listKey.currentState.removeItem(index, (context, animation) {
+      return SizedBox(height: 0, width: 0,);
     });
   }
 
-  void _changeTaskType(int id, TaskType taskType) {
-    final Task target = _tasks.firstWhere((task) => task.id == id);
+  void _changeTaskType(BigInt id, TaskType taskType) {
+    final removeTaskList = _selectTaskListByCurrentScreen();
+    final int removeIndex = removeTaskList.indexWhere((task) => task.id == id);
+    final Task targetTask = removeTaskList[removeIndex];
+    final targetTaskList = _selectTaskListByType(taskType);
+
     setState(() {
-      target.type = taskType;
+      targetTask.type = taskType;
+      targetTaskList.add(targetTask);
+    });
+    final targetListKey = _selectListKeyByType(taskType);
+    if (targetListKey.currentState != null) {
+      targetListKey.currentState.insertItem(targetTaskList.length - 1);
+    }
+
+    setState(() {
+      targetTaskList.sort((a, b) => a.id.compareTo(b.id));
+    });
+
+    setState(() {
+      removeTaskList.removeAt(removeIndex);
+    });
+    final removeListKey = _selectListKeyByCurrentScreen();
+    removeListKey.currentState.removeItem(removeIndex, (context, animation) {
+      return Container();
     });
   }
 
-  List<Task> _filterTasks(TaskType taskType) {
-    return _tasks.where((task) => task.type == taskType).toList();
-  }
-
-  List<Task> _selectTasks() {
+  List<Task> _selectTaskListByCurrentScreen() {
     switch (_selectedIndex) {
       case 0:
-        return _filterTasks(TaskType.Capture);
+        return _captures;
       case 1:
-        return _filterTasks(TaskType.NDN);
+        return _ndns;
       case 2: 
-        return _filterTasks(TaskType.NVDN);
+        return _nvdns;
       default:
-        return _filterTasks(TaskType.Capture);
+        return _captures;
+    }
+  }
+
+  List<Task> _selectTaskListByType(TaskType taskType) {
+    switch (taskType) {
+      case TaskType.Capture:
+        return _captures;
+      case TaskType.NDN:
+        return _ndns;
+      case TaskType.NVDN: 
+        return _nvdns;
+      default:
+        return _captures;
+    }
+  }
+
+  GlobalKey<AnimatedListState> _selectListKeyByCurrentScreen() {
+    switch (_selectedIndex) {
+      case 0:
+        return _capturesKey;
+      case 1:
+        return _ndnsKey;
+      case 2: 
+        return _nvdnsKey;
+      default:
+        return _capturesKey;
+    }
+  }
+
+  GlobalKey<AnimatedListState> _selectListKeyByType(TaskType taskType) {
+    switch (taskType) {
+      case TaskType.Capture:
+        return _capturesKey;
+      case TaskType.NDN:
+        return _ndnsKey;
+      case TaskType.NVDN: 
+        return _nvdnsKey;
+      default:
+        return _capturesKey;
     }
   }
 
@@ -122,17 +199,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool canComplete() {
-    final List<Task> capturedTasks = _tasks.where((task) => task.type == TaskType.Capture).toList();
-    if (capturedTasks.length == 0) return false;
+    if (_captures.length == 0) return false;
 
-    return !capturedTasks.any((task) => task.done == false);
+    return !_captures.any((task) => task.done == false);
   }
 
   void _completeToday() {
     if (!canComplete()) return;
 
+    for (var i = 0; i <= _captures.length - 1; i++) {
+      _capturesKey.currentState.removeItem(0, (context, animation) {
+        return Container();
+      });
+    }
     setState(() {
-      _tasks = _tasks.where((task) => task.type != TaskType.Capture).toList();
+      _captures.clear();
     });
   }
 
@@ -172,9 +253,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  BigInt _makeNewId() {
+    DateTime now = DateTime.now();
+    String timeString = now.year.toString()
+      + now.month.toString().padLeft(2, "0")
+      + now.day.toString().padLeft(2, "0")
+      + now.hour.toString().padLeft(2, "0")
+      + now.minute.toString().padLeft(2, "0")
+      + now.second.toString().padLeft(2, "0")
+      + now.millisecond.toString().padLeft(3, "0")
+      + now.microsecond.toString().padLeft(3, "0");
+    return BigInt.parse(timeString);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final tasks = _selectTasks();
+    final tasks = _selectTaskListByCurrentScreen();
+    final listKey = _selectListKeyByCurrentScreen();
     return Scaffold(
       appBar: AppBar(
         title: Text(_handleTitle()),
@@ -183,6 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           Expanded(
             child: TaskList(
+              listKey: listKey,
               tasks: tasks,
               changeTaskState: _changeTaskState,
               changeTaskType: _changeTaskType,
