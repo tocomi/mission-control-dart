@@ -45,9 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   ];
 
-  GlobalKey<AnimatedListState> _capturesKey = GlobalKey<AnimatedListState>();
-  GlobalKey<AnimatedListState> _ndnsKey = GlobalKey<AnimatedListState>();
-  GlobalKey<AnimatedListState> _nvdnsKey = GlobalKey<AnimatedListState>();
+  final _capturesKey = GlobalKey<AnimatedListState>();
+  final _ndnsKey = GlobalKey<AnimatedListState>();
+  final _nvdnsKey = GlobalKey<AnimatedListState>();
 
   final TextEditingController _controller = new TextEditingController();
   String _capture = '';
@@ -73,6 +73,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       _captures.add(task);
+    });
+    if (_capturesKey.currentState != null) {
+      _capturesKey.currentState.insertItem(_captures.length - 1);
+    }
+
+    setState(() {
       _capture = '';
     });
     _controller.clear();
@@ -92,22 +98,38 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       taskList.removeAt(index);
     });
+
+    final listKey = _selectListKeyByCurrentScreen();
+    listKey.currentState.removeItem(index, (context, animation) {
+      return SizedBox(height: 0, width: 0,);
+    });
   }
 
   void _changeTaskType(BigInt id, TaskType taskType) {
     final removeTaskList = _selectTaskListByCurrentScreen();
-    final int targetIndex = removeTaskList.indexWhere((task) => task.id == id);
-    final Task targetTask = removeTaskList[targetIndex];
+    final int removeIndex = removeTaskList.indexWhere((task) => task.id == id);
+    final Task targetTask = removeTaskList[removeIndex];
     final targetTaskList = _selectTaskListByType(taskType);
 
     setState(() {
       targetTask.type = taskType;
       targetTaskList.add(targetTask);
+    });
+    final targetListKey = _selectListKeyByType(taskType);
+    if (targetListKey.currentState != null) {
+      targetListKey.currentState.insertItem(targetTaskList.length - 1);
+    }
+
+    setState(() {
       targetTaskList.sort((a, b) => a.id.compareTo(b.id));
     });
 
     setState(() {
-      removeTaskList.removeAt(targetIndex);
+      removeTaskList.removeAt(removeIndex);
+    });
+    final removeListKey = _selectListKeyByCurrentScreen();
+    removeListKey.currentState.removeItem(removeIndex, (context, animation) {
+      return Container();
     });
   }
 
@@ -137,6 +159,32 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  GlobalKey<AnimatedListState> _selectListKeyByCurrentScreen() {
+    switch (_selectedIndex) {
+      case 0:
+        return _capturesKey;
+      case 1:
+        return _ndnsKey;
+      case 2: 
+        return _nvdnsKey;
+      default:
+        return _capturesKey;
+    }
+  }
+
+  GlobalKey<AnimatedListState> _selectListKeyByType(TaskType taskType) {
+    switch (taskType) {
+      case TaskType.Capture:
+        return _capturesKey;
+      case TaskType.NDN:
+        return _ndnsKey;
+      case TaskType.NVDN: 
+        return _nvdnsKey;
+      default:
+        return _capturesKey;
+    }
+  }
+
   String _handleTitle() {
     switch (_selectedIndex) {
       case 0:
@@ -159,6 +207,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void _completeToday() {
     if (!canComplete()) return;
 
+    for (var i = 0; i <= _captures.length - 1; i++) {
+      _capturesKey.currentState.removeItem(0, (context, animation) {
+        return Container();
+      });
+    }
     setState(() {
       _captures.clear();
     });
@@ -216,6 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final tasks = _selectTaskListByCurrentScreen();
+    final listKey = _selectListKeyByCurrentScreen();
     return Scaffold(
       appBar: AppBar(
         title: Text(_handleTitle()),
@@ -224,6 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           Expanded(
             child: TaskList(
+              listKey: listKey,
               tasks: tasks,
               changeTaskState: _changeTaskState,
               changeTaskType: _changeTaskType,
